@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"olusamimaths/kurunmi/src/domain"
+	"olusamimaths/kurunmi/src/interface/messages"
 	"olusamimaths/kurunmi/src/interface/validators"
 	"olusamimaths/kurunmi/src/usecases"
 
@@ -26,7 +27,7 @@ func(controller *PostController) Add(res http.ResponseWriter, req *http.Request)
 	err := json.NewDecoder(req.Body).Decode(&post)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(res).Encode(ErrorResponse{Message: "Invalid request payload"})
+		json.NewEncoder(res).Encode(ErrorResponse{Message: messages.InvalidRequestPayload})
 		return
 	}
 
@@ -34,7 +35,7 @@ func(controller *PostController) Add(res http.ResponseWriter, req *http.Request)
 	isValid := postValidator.Validate(post)
 	if !isValid {
 		res.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(res).Encode(ErrorResponse{Message: "Invalid post data"})
+		json.NewEncoder(res).Encode(ErrorResponse{Message: messages.InvalidPostData})
 		return
 	}
 
@@ -68,7 +69,7 @@ func(controller *PostController) FindOne(res http.ResponseWriter, req *http.Requ
 	id := req.URL.Query().Get("id")
 	if id == "" {
 		res.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(res).Encode(ErrorResponse{Message: "Invalid post id"})
+		json.NewEncoder(res).Encode(ErrorResponse{Message: messages.InvalidPostId})
 		return
 	}
 

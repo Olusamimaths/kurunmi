@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"olusamimaths/kurunmi/src/domain"
+	"olusamimaths/kurunmi/src/interface/messages"
 	"olusamimaths/kurunmi/src/interface/validators"
 	"olusamimaths/kurunmi/src/usecases"
 
@@ -25,7 +26,7 @@ func(controller *AuthorController) Add(res http.ResponseWriter, req *http.Reques
 	err := json.NewDecoder(req.Body).Decode(&author)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(res).Encode(ErrorResponse{Message: "Invalid request payload"})
+		json.NewEncoder(res).Encode(ErrorResponse{Message: messages.InvalidRequestPayload})
 		return
 	}
 
@@ -33,7 +34,7 @@ func(controller *AuthorController) Add(res http.ResponseWriter, req *http.Reques
 	isValid := authorValidator.Validate(author)
 	if !isValid {
 		res.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(res).Encode(ErrorResponse{Message: "Invalid author data"})
+		json.NewEncoder(res).Encode(ErrorResponse{Message: messages.InvalidAuthorData})
 		return
 	}
 
