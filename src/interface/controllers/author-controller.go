@@ -58,3 +58,24 @@ func(controller *AuthorController) FindAll(res http.ResponseWriter, req *http.Re
 
 	json.NewEncoder(res).Encode(authors)
 }
+
+func(controller *AuthorController) FindOne(res http.ResponseWriter, req *http.Request) {
+	res.Header().Set("Content-Type", "application/json")
+
+	id := req.URL.Query().Get("id")
+	if id == "" {
+		res.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(res).Encode(ErrorResponse{Message: messages.InvalidId})
+		return
+	}
+
+	post, err := controller.authInteractor.FindOne(id)
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(res).Encode(ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	res.WriteHeader(http.StatusOK)
+	json.NewEncoder(res).Encode(post)
+}

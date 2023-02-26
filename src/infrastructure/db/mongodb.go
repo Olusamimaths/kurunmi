@@ -11,16 +11,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type IMongoDBHandler interface {
-	repository.DBHandler
-}
 type mongoDBHandler struct {
 	MongoClient mongo.Client
-	database *mongo.Database
-
+	database    *mongo.Database
 }
 
-func NewMongoDBHandler(connectString string, dbname string) (IMongoDBHandler, error) {
+func NewDBHandler(connectString string, dbname string) (repository.DBHandler, error) {
 	dbHandler := mongoDBHandler{}
 	clientOptions := options.Client().ApplyURI(connectString)
 
@@ -30,7 +26,7 @@ func NewMongoDBHandler(connectString string, dbname string) (IMongoDBHandler, er
 		return dbHandler, err
 	}
 
-	err =  client.Ping(context.TODO(), nil)
+	err = client.Ping(context.TODO(), nil)
 	if err != nil {
 		log.Fatal(err)
 		return dbHandler, err
@@ -111,7 +107,6 @@ func (dbHandler mongoDBHandler) FindAllAuthors() ([]*domain.Author, error) {
 	return results, nil
 }
 
-
 func (dbHandler mongoDBHandler) FindAuthor(id string) (*domain.Author, error) {
 	var result *domain.Author
 	collection := dbHandler.database.Collection("authors")
@@ -135,5 +130,3 @@ func (dbHandler mongoDBHandler) SaveAuthor(author *domain.Author) error {
 	}
 	return nil
 }
-
-

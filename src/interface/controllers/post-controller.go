@@ -66,7 +66,7 @@ func(controller *PostController) FindOne(res http.ResponseWriter, req *http.Requ
 	id := req.URL.Query().Get("id")
 	if id == "" {
 		res.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(res).Encode(ErrorResponse{Message: messages.InvalidPostId})
+		json.NewEncoder(res).Encode(ErrorResponse{Message: messages.InvalidId})
 		return
 	}
 
