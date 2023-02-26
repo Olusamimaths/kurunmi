@@ -7,8 +7,6 @@ import (
 	"olusamimaths/kurunmi/src/interface/messages"
 	"olusamimaths/kurunmi/src/interface/validators"
 	"olusamimaths/kurunmi/src/usecases"
-
-	"github.com/go-playground/validator/v10"
 )
 
 type PostController struct {
@@ -16,7 +14,7 @@ type PostController struct {
 	validator validators.PostValidator
 }
 
-func NewBookController(interactor usecases.PostInteractor, validator validators.PostValidator) *PostController {
+func NewPostController(interactor usecases.PostInteractor, validator validators.PostValidator) *PostController {
 	return &PostController{interactor, validator }
 }
 
@@ -31,15 +29,14 @@ func(controller *PostController) Add(res http.ResponseWriter, req *http.Request)
 		return
 	}
 
-	postValidator := validators.NewPostValidator(validator.New())
-	isValid := postValidator.Validate(post)
+	isValid := controller.validator.Validate(post)
 	if !isValid {
 		res.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(res).Encode(ErrorResponse{Message: messages.InvalidPostData})
 		return
 	}
 
-	err = controller.postInteractor.CreateBook(post)
+	err = controller.postInteractor.CreatePost(post)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(res).Encode(ErrorResponse{Message: err.Error()})

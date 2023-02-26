@@ -13,7 +13,7 @@ func NewPostRepo(handler DBHandler) PostRepo {
 	return PostRepo{handler}
 }
 
-func (repo *PostRepo) SavePost(post domain.Post) error {
+func (repo PostRepo) Save(post domain.Post) error {
 	err := repo.handler.SavePost(&post)
 	if err != nil {
 		log.Println(err.Error())
@@ -22,7 +22,7 @@ func (repo *PostRepo) SavePost(post domain.Post) error {
 	return nil
 }
 
-func (repo *PostRepo) FindAllPosts() ([]*domain.Post, error) {
+func (repo PostRepo) FindAll() ([]*domain.Post, error) {
 	posts, err := repo.handler.FindAllPosts()
 	if err != nil {
 		log.Println(err.Error())
@@ -31,7 +31,7 @@ func (repo *PostRepo) FindAllPosts() ([]*domain.Post, error) {
 	return posts, nil
 }
 
-func (repo *PostRepo) FindOnePost(id string) (*domain.Post, error) {
+func (repo PostRepo) FindOne(id string) (*domain.Post, error) {
 	result, err := repo.handler.FindPost(id)
 	if err != nil {
 		log.Println(err.Error())

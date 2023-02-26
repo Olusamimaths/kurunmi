@@ -13,7 +13,7 @@ func NewAuthorRepo(handler DBHandler) AuthorRepo {
 	return AuthorRepo{handler}
 }
 
-func (repo *AuthorRepo) SaveAuthor(author domain.Author) error {
+func (repo AuthorRepo) Save(author domain.Author) error {
 	err := repo.handler.SaveAuthor(&author)
 	if err != nil {
 		log.Println(err.Error())
@@ -22,7 +22,7 @@ func (repo *AuthorRepo) SaveAuthor(author domain.Author) error {
 	return nil
 }
 
-func (repo *AuthorRepo) FindAllAuthors() ([]*domain.Author, error) {
+func (repo AuthorRepo) FindAll() ([]*domain.Author, error) {
 	authors, err := repo.handler.FindAllAuthors()
 	if err != nil {
 		log.Println(err.Error())
@@ -31,7 +31,7 @@ func (repo *AuthorRepo) FindAllAuthors() ([]*domain.Author, error) {
 	return authors, nil
 }
 
-func (repo *AuthorRepo) FindOneAuthor(id string) (*domain.Author, error) {
+func (repo AuthorRepo) FindOne(id string) (*domain.Author, error) {
 	result, err := repo.handler.FindAuthor(id)
 	if err != nil {
 		log.Println(err.Error())

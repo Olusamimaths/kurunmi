@@ -3,6 +3,7 @@ module olusamimaths/kurunmi
 go 1.19
 
 require (
+	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/go-playground/validator/v10 v10.11.2
 	github.com/gorilla/mux v1.8.0
 	go.mongodb.org/mongo-driver v1.11.2
@@ -24,4 +25,5 @@ require (
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.4.0 // indirect
 	golang.org/x/text v0.6.0 // indirect
+	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 )

@@ -7,16 +7,15 @@ import (
 	"olusamimaths/kurunmi/src/interface/messages"
 	"olusamimaths/kurunmi/src/interface/validators"
 	"olusamimaths/kurunmi/src/usecases"
-
-	"github.com/go-playground/validator/v10"
 )
 
 type AuthorController struct {
 	authInteractor usecases.AuthorInteractor
+	validator validators.AuthorValidator
 }
 
-func NewAuthorController(interactor usecases.AuthorInteractor) *AuthorController {
-	return &AuthorController{interactor}
+func NewAuthorController(interactor usecases.AuthorInteractor, validator validators.AuthorValidator) *AuthorController {
+	return &AuthorController{interactor, validator}
 }
 
 func(controller *AuthorController) Add(res http.ResponseWriter, req *http.Request) {
@@ -30,8 +29,7 @@ func(controller *AuthorController) Add(res http.ResponseWriter, req *http.Reques
 		return
 	}
 
-	authorValidator := validators.NewAuthorValidator(validator.New())
-	isValid := authorValidator.Validate(author)
+	isValid := controller.validator.Validate(author)
 	if !isValid {
 		res.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(res).Encode(ErrorResponse{Message: messages.InvalidAuthorData})

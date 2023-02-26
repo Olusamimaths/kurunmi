@@ -13,7 +13,7 @@ func NewPostInteractor(repository domain.PostRepository) PostInteractor {
 	return PostInteractor{repository}
 }
 
-func (interactor *PostInteractor) CreateBook(post domain.Post) error {
+func (interactor *PostInteractor) CreatePost(post domain.Post) error {
 	err := interactor.PostRepository.Save(post)
 	if err != nil {
 		log.Println(err.Error())
