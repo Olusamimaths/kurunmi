@@ -30,7 +30,7 @@ func (pV *postValidator) Validate(post domain.Post) bool {
 }
 
 func (pV *postValidator) ValidateAuthor(title string) bool {
-	errs := pV.validator.Var(title, "required, min=3, max=20")
+	errs := pV.validator.Var(title, "required,min=3,max=20")
 	if errs != nil {
 		fmt.Println(errs)
 		return false
@@ -39,7 +39,7 @@ func (pV *postValidator) ValidateAuthor(title string) bool {
 }
 
 func (pV *postValidator) ValidateBody(body string) bool {
-	errs := pV.validator.Var(body, "required, min=10")
+	errs := pV.validator.Var(body, "required,min=10")
 	if errs != nil {
 		fmt.Println(errs)
 		return false
@@ -48,7 +48,7 @@ func (pV *postValidator) ValidateBody(body string) bool {
 }
 
 func (pV *postValidator) ValidateTitle(author string) bool {
-	errs := pV.validator.Var(author, "required, min=3, max=100")
+	errs := pV.validator.Var(author, "required,min=3,max=100")
 	if errs != nil {
 		fmt.Println(errs)
 		return false

@@ -3,20 +3,36 @@ package db
 import (
 	"context"
 	"log"
-	"olusamimaths/kurunmi/src/domain"
+	"olusamimaths/kurunmi/src/config"
 	"olusamimaths/kurunmi/src/interface/repository"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+type DBHandler interface {
+	repository.DBHandler
+}
 
 type mongoDBHandler struct {
 	MongoClient mongo.Client
 	database    *mongo.Database
 }
 
-func NewDBHandler(connectString string, dbname string) (repository.DBHandler, error) {
+
+func NewDatabaseHandler(c *config.Config) DBHandler {
+	dbHandler, err := getDbHandler(c)
+
+	if err != nil {
+		log.Fatal(err.Error())
+		panic("Unable to connect to database")
+	}
+	return dbHandler
+}
+
+func getDbHandler(c *config.Config) (DBHandler, error) {
+	connectString := c.Get().GetString("db.url")
+	dbname := c.Get().GetString("db.name")
 	dbHandler := mongoDBHandler{}
 	clientOptions := options.Client().ApplyURI(connectString)
 
@@ -37,96 +53,3 @@ func NewDBHandler(connectString string, dbname string) (repository.DBHandler, er
 	return dbHandler, nil
 }
 
-func (dbHandler mongoDBHandler) FindAllPosts() ([]*domain.Post, error) {
-	var results []*domain.Post
-	collection := dbHandler.database.Collection("posts")
-
-	cur, err := collection.Find(context.TODO(), bson.D{})
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
-
-	for cur.Next(context.TODO()) {
-		var elem domain.Post
-		err := cur.Decode(&elem)
-		if err != nil {
-			log.Fatal(err)
-			return nil, err
-		}
-
-		results = append(results, &elem)
-	}
-	return results, nil
-}
-
-func (dbHandler mongoDBHandler) FindPost(id string) (*domain.Post, error) {
-	var result *domain.Post
-	collection := dbHandler.database.Collection("posts")
-
-	filter := bson.D{{Key: "_id", Value: id}}
-	err := collection.FindOne(context.TODO(), filter).Decode(&result)
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
-	return result, nil
-}
-
-func (dbHandler mongoDBHandler) SavePost(post *domain.Post) error {
-	collection := dbHandler.database.Collection("posts")
-
-	_, err := collection.InsertOne(context.TODO(), post)
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
-	return nil
-}
-
-func (dbHandler mongoDBHandler) FindAllAuthors() ([]*domain.Author, error) {
-	var results []*domain.Author
-	collection := dbHandler.database.Collection("authors")
-
-	cur, err := collection.Find(context.TODO(), bson.D{})
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
-
-	for cur.Next(context.TODO()) {
-		var elem domain.Author
-		err := cur.Decode(&elem)
-		if err != nil {
-			log.Fatal(err)
-			return nil, err
-		}
-
-		results = append(results, &elem)
-	}
-	return results, nil
-}
-
-func (dbHandler mongoDBHandler) FindAuthor(id string) (*domain.Author, error) {
-	var result *domain.Author
-	collection := dbHandler.database.Collection("authors")
-
-	filter := bson.D{{Key: "_id", Value: id}}
-	err := collection.FindOne(context.TODO(), filter).Decode(&result)
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
-	return result, nil
-}
-
-func (dbHandler mongoDBHandler) SaveAuthor(author *domain.Author) error {
-	collection := dbHandler.database.Collection("authors")
-
-	_, err := collection.InsertOne(context.TODO(), author)
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
-	return nil
-}

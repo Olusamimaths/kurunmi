@@ -1,0 +1,10 @@
+app:
+  port: 3000
+  log: true
+
+db:
+  url: ""
+  dbname: ""
+  host: ""
+  log: false
+  sync: false

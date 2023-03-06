@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"olusamimaths/kurunmi/src/infrastructure/db"
 	"olusamimaths/kurunmi/src/infrastructure/router"
 	"olusamimaths/kurunmi/src/interface/controllers"
 	"olusamimaths/kurunmi/src/interface/repository"
@@ -11,12 +12,12 @@ import (
 )
 
 func registerAuthorRoutes(httpRouter router.Router, authorController controllers.AuthorController) {
-	httpRouter.POST("/author/add", authorController.Add)
-	httpRouter.GET("/author", authorController.FindAll)
-	httpRouter.GET("/author/:id", authorController.FindOne)
+	httpRouter.POST("/v1/author", authorController.Add)
+	httpRouter.GET("/v1/author", authorController.FindAll)
+	httpRouter.GET("/v1/author/:id", authorController.FindOne)
 }
 
-func getAuthorController() controllers.AuthorController {
+func getAuthorController(dbHandler db.DBHandler) controllers.AuthorController {
 	authorRepository := repository.NewAuthorRepo(dbHandler)
 	authorInteractor := usecases.NewAuthorInteractor(authorRepository)
 	authorValidator := validators.NewAuthorValidator(validator.New())

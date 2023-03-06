@@ -1,0 +1,19 @@
+services:
+  mongodb:
+    container_name: mongodb_kurunmi
+    restart: always
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+  
+  kurunmi:
+    container_name: kurunmi
+    restart: always
+    build: .
+    ports:
+      - "8080:8080"
+    command: bash -c "/usr/wait-for-it.sh --timeout=30 mongodb_kurunmi:27017"
+    depends_on:
+      - mongodb
+    volumes:
+      - ./src:/src

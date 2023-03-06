@@ -20,7 +20,7 @@ type authorValidator struct {
 }
 
 func (aV *authorValidator) ValidateEmail(email string) bool {
-	errs := aV.validator.Var(email, "required, email")
+	errs := aV.validator.Var(email, "required,email")
 	if errs != nil {
 		fmt.Println(errs)
 		return false
@@ -29,7 +29,7 @@ func (aV *authorValidator) ValidateEmail(email string) bool {
 }
 
 func (aV *authorValidator) ValidateName(name string) bool {
-	errs := aV.validator.Var(name, "required, min=3, max=20")
+	errs := aV.validator.Var(name, "required,min=3,max=20")
 	if errs != nil {
 		fmt.Println(errs)
 		return false
@@ -38,7 +38,7 @@ func (aV *authorValidator) ValidateName(name string) bool {
 }
 
 func (aV *authorValidator) ValidateUsername(username string) bool {
-	errs := aV.validator.Var(username, "required, min=3, max=20")
+	errs := aV.validator.Var(username, "required,min=3,max=20")
 	if errs != nil {
 		fmt.Println(errs)
 		return false
