@@ -1,9 +1,9 @@
 package main
 
 import (
-	"olusamimaths/kurunmi/src/config"
-	"olusamimaths/kurunmi/src/infrastructure/router"
-	"olusamimaths/kurunmi/src/interface/routes"
+	"olusamimaths/kurunmi/config"
+	"olusamimaths/kurunmi/infrastructure/router"
+	"olusamimaths/kurunmi/interface/routes"
 )
 
 var (

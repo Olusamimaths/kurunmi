@@ -1,0 +1,9 @@
+app:
+  port: 8080
+  log: true
+
+db:
+  url: "mongodb://localhost:27017"
+  name: "kurunmi"
+  log: true
+  sync: true
