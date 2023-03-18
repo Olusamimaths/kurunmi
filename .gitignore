@@ -16,3 +16,4 @@
 src/config/local.yaml
 
 bin/*
+tmp/*
