@@ -10,9 +10,6 @@ COPY . .
 
 EXPOSE 8080
 
-COPY wait-for-it.sh /usr/wait-for-it.sh
-RUN chmod +x /usr/wait-for-it.sh
-
 RUN chmod +x ./start-dev.sh
 
 CMD ["./start-dev.sh"]
