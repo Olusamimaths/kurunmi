@@ -4,6 +4,7 @@ import (
 	"olusamimaths/kurunmi/config"
 	"olusamimaths/kurunmi/delivery/http/router"
 	"olusamimaths/kurunmi/delivery/http/routes"
+	"olusamimaths/kurunmi/infrastructure/db"
 )
 
 var (
@@ -16,6 +17,15 @@ func main() {
 
 func run() {
 	c := config.NewConfig()
-	routes.RegisterRoutes(httpRouter, c)
+	dbHandler := db.NewDatabaseHandler(c)
+
+	routes.SetUpDefaultRoutes(httpRouter)
+
+	authorController := routes.GetAuthorController(dbHandler)
+	routes.RegisterAuthorRoutes(httpRouter, authorController)
+
+	postController := routes.GetPostController(dbHandler)
+	routes.RegisterPostRoutes(httpRouter, postController)
+
 	httpRouter.SERVE(":8080")
 }

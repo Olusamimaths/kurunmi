@@ -18,11 +18,11 @@ func (c *Config) Get() *viper.Viper {
 
 func NewConfig() *Config {
 	c := new(Config)
-	c.config = readConfig()
+	c.config = readEnvironmentConfig()
 	return c
 }
 
-func readConfig() *viper.Viper {
+func readEnvironmentConfig() *viper.Viper {
 	log.Info("reading environment variables")
 	v := viper.New()
 	v.AutomaticEnv()

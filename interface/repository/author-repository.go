@@ -3,18 +3,27 @@ package repository
 import (
 	"log"
 	"olusamimaths/kurunmi/domain"
+	"olusamimaths/kurunmi/infrastructure/utils"
 )
 
 type AuthorRepo struct {
 	handler DBHandler
+	passswordManager utils.PasswordManager
 }
 
 func NewAuthorRepo(handler DBHandler) AuthorRepo {
-	return AuthorRepo{handler}
+	return AuthorRepo{handler, utils.NewPasswordManager()}
 }
 
 func (repo AuthorRepo) Save(author domain.Author) error {
-	err := repo.handler.SaveAuthor(&author)
+	hashedPassword, err := repo.passswordManager.HashPassword(author.Password)
+	if err != nil {
+		log.Println(err.Error())
+		return err
+	}
+
+	author.Password = hashedPassword
+	err = repo.handler.SaveAuthor(&author)
 	if err != nil {
 		log.Println(err.Error())
 		return err

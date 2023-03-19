@@ -5,7 +5,7 @@ import (
 	"olusamimaths/kurunmi/interface/controllers"
 )
 
-func registerPostRoutes(httpRouter router.Router, postController controllers.PostController) {
+func RegisterPostRoutes(httpRouter router.Router, postController controllers.PostController) {
 	httpRouter.POST("/v1/post", postController.Add)
 	httpRouter.GET("/v1/post", postController.FindAll)
 	httpRouter.GET("/v1/post/:id", postController.FindOne)
