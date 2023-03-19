@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"olusamimaths/kurunmi/infrastructure/router"
+	"olusamimaths/kurunmi/delivery/http/router"
 	"olusamimaths/kurunmi/interface/controllers"
 )
 

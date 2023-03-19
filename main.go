@@ -2,8 +2,8 @@ package main
 
 import (
 	"olusamimaths/kurunmi/config"
-	"olusamimaths/kurunmi/infrastructure/router"
-	"olusamimaths/kurunmi/interface/routes"
+	"olusamimaths/kurunmi/delivery/http/router"
+	"olusamimaths/kurunmi/delivery/http/routes"
 )
 
 var (
