@@ -2,23 +2,26 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"olusamimaths/kurunmi/domain"
 	"olusamimaths/kurunmi/interface/messages"
 	"olusamimaths/kurunmi/interface/validators"
 	"olusamimaths/kurunmi/usecases"
+
+	"github.com/gorilla/mux"
 )
 
 type AuthorController struct {
 	authInteractor usecases.AuthorInteractor
-	validator validators.AuthorValidator
+	validator      validators.AuthorValidator
 }
 
 func NewAuthorController(interactor usecases.AuthorInteractor, validator validators.AuthorValidator) *AuthorController {
 	return &AuthorController{interactor, validator}
 }
 
-func(controller *AuthorController) Add(res http.ResponseWriter, req *http.Request) {
+func (controller *AuthorController) Add(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 
 	var author domain.Author
@@ -46,7 +49,7 @@ func(controller *AuthorController) Add(res http.ResponseWriter, req *http.Reques
 	res.WriteHeader(http.StatusCreated)
 }
 
-func(controller *AuthorController) FindAll(res http.ResponseWriter, req *http.Request) {
+func (controller *AuthorController) FindAll(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 
 	authors, err := controller.authInteractor.FindAll()
@@ -59,10 +62,12 @@ func(controller *AuthorController) FindAll(res http.ResponseWriter, req *http.Re
 	json.NewEncoder(res).Encode(authors)
 }
 
-func(controller *AuthorController) FindOne(res http.ResponseWriter, req *http.Request) {
+func (controller *AuthorController) FindOne(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
+	fmt.Println("FindOne called")
 
-	id := req.URL.Path[len("/v1/author/"):]
+	vars := mux.Vars(req)
+	id := vars["id"]
 	if id == "" {
 		res.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(res).Encode(ErrorResponse{Message: messages.InvalidId})

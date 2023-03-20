@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"log"
 	"olusamimaths/kurunmi/domain"
 	"olusamimaths/kurunmi/infrastructure/utils"
@@ -43,6 +44,7 @@ func (repo AuthorRepo) FindAll() ([]*domain.Author, error) {
 func (repo AuthorRepo) FindOne(id string) (*domain.Author, error) {
 	result, err := repo.handler.FindAuthor(id)
 	if err != nil {
+		fmt.Println("error: ", err.Error())
 		log.Println(err.Error())
 		return nil, err
 	}

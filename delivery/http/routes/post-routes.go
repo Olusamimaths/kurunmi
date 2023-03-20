@@ -8,7 +8,7 @@ import (
 func RegisterPostRoutes(httpRouter router.Router, postController controllers.PostController) {
 	httpRouter.POST("/v1/post", postController.Add)
 	httpRouter.GET("/v1/post", postController.FindAll)
-	httpRouter.GET("/v1/post/:id", postController.FindOne)
+	httpRouter.GET("/v1/post/{id}", postController.FindOne)
 }
 
 

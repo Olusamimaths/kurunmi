@@ -2,10 +2,12 @@ package db
 
 import (
 	"context"
+	"errors"
 	"log"
 	"olusamimaths/kurunmi/config"
 	"olusamimaths/kurunmi/interface/repository"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -53,3 +55,11 @@ func getDbHandler(c *config.Config) (DBHandler, error) {
 	return dbHandler, nil
 }
 
+func ConvertStringToObjectId(id string) (primitive.ObjectID, error) {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Println(err.Error())
+		return objectId, errors.New("invalid id")
+	}
+	return objectId, nil
+}

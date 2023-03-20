@@ -14,7 +14,7 @@ func (dbHandler mongoDBHandler) FindAllPosts() ([]*domain.Post, error) {
 
 	cur, err := collection.Find(context.TODO(), bson.D{})
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err.Error())
 		return nil, err
 	}
 
@@ -22,7 +22,7 @@ func (dbHandler mongoDBHandler) FindAllPosts() ([]*domain.Post, error) {
 		var elem domain.Post
 		err := cur.Decode(&elem)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err.Error())
 			return nil, err
 		}
 
@@ -35,10 +35,14 @@ func (dbHandler mongoDBHandler) FindPost(id string) (*domain.Post, error) {
 	var result *domain.Post
 	collection := dbHandler.database.Collection("posts")
 
-	filter := bson.D{{Key: "_id", Value: id}}
-	err := collection.FindOne(context.TODO(), filter).Decode(&result)
+	objectId, err := ConvertStringToObjectId(id)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
+	}
+	filter := bson.D{{Key: "_id", Value: objectId}}
+	err = collection.FindOne(context.TODO(), filter).Decode(&result)
+	if err != nil {
+		log.Println(err.Error())
 		return nil, err
 	}
 	return result, nil
@@ -49,7 +53,7 @@ func (dbHandler mongoDBHandler) SavePost(post *domain.Post) error {
 
 	_, err := collection.InsertOne(context.TODO(), post)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err.Error())
 		return err
 	}
 	return nil

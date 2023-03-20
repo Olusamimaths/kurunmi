@@ -7,6 +7,8 @@ import (
 	"olusamimaths/kurunmi/interface/messages"
 	"olusamimaths/kurunmi/interface/validators"
 	"olusamimaths/kurunmi/usecases"
+
+	"github.com/gorilla/mux"
 )
 
 type PostController struct {
@@ -63,7 +65,8 @@ func(controller *PostController) FindAll(res http.ResponseWriter, req *http.Requ
 func(controller *PostController) FindOne(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 
-	id := req.URL.Query().Get("id")
+	vars := mux.Vars(req)
+	id := vars["id"]
 	if id == "" {
 		res.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(res).Encode(ErrorResponse{Message: messages.InvalidId})
