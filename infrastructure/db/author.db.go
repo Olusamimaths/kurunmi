@@ -3,10 +3,12 @@ package db
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"olusamimaths/kurunmi/domain"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -58,18 +60,33 @@ func (dbHandler mongoDBHandler) SaveAuthor(author *domain.Author) error {
 	collection := dbHandler.database.Collection("authors")
 
 	filter := bson.D{{Key: "email", Value: author.Email}}
-	_, err := collection.Find(context.TODO(), filter)
+	err := checkForExistingEntity(collection, filter)
+	fmt.Println("error: ", err)
 	if err != nil {
-		log.Printf("error: %+v", err)
-		if err != mongo.ErrNoDocuments {
-			return errors.New("error occured while saving author")
-		}
+		return errors.New("email already exists")
+	}
+
+	filter = bson.D{{Key: "username", Value: author.Username}}
+	err = checkForExistingEntity(collection, filter)
+	if err != nil {
+		return errors.New("username already exists")
 	}
 
 	_, err = collection.InsertOne(context.TODO(), author)
 	if err != nil {
 		log.Println(err.Error())
 		return err
+	}
+	return nil
+}
+
+func checkForExistingEntity(collection *mongo.Collection, filter primitive.D) (error) {
+	var result bson.M
+	err := collection.FindOne(context.TODO(), filter).Decode(&result)
+	if err == nil {
+		if result != nil {
+			return errors.New("entity already exists")
+		}
 	}
 	return nil
 }
