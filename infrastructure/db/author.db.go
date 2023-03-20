@@ -2,17 +2,21 @@ package db
 
 import (
 	"context"
+	"errors"
 	"log"
 	"olusamimaths/kurunmi/domain"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func (dbHandler mongoDBHandler) FindAllAuthors() ([]*domain.Author, error) {
 	var results []*domain.Author
 	collection := dbHandler.database.Collection("authors")
 
-	cur, err := collection.Find(context.TODO(), bson.D{})
+	opts := options.Find().SetProjection(bson.D{{Key: "password", Value: 0}})
+	cur, err := collection.Find(context.TODO(), bson.D{}, opts)
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
@@ -47,7 +51,16 @@ func (dbHandler mongoDBHandler) FindAuthor(id string) (*domain.Author, error) {
 func (dbHandler mongoDBHandler) SaveAuthor(author *domain.Author) error {
 	collection := dbHandler.database.Collection("authors")
 
-	_, err := collection.InsertOne(context.TODO(), author)
+	filter := bson.D{{Key: "email", Value: author.Email}}
+	_, err := collection.Find(context.TODO(), filter)
+	if err != nil {
+		log.Printf("error: %+v" ,err)
+		if err != mongo.ErrNoDocuments {
+			return errors.New("error occured while saving author")
+		}
+	}
+
+	_, err = collection.InsertOne(context.TODO(), author)
 	if err != nil {
 		log.Fatal(err)
 		return err

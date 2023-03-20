@@ -62,7 +62,7 @@ func(controller *AuthorController) FindAll(res http.ResponseWriter, req *http.Re
 func(controller *AuthorController) FindOne(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 
-	id := req.URL.Query().Get("id")
+	id := req.URL.Path[len("/v1/author/"):]
 	if id == "" {
 		res.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(res).Encode(ErrorResponse{Message: messages.InvalidId})
